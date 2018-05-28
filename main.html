@@ -1,0 +1,27 @@
+<html>
+<head>
+    <script type="text/javascript" src="/main.js"></script>
+    <script type="text/css" src="/main.css"></script>
+</head>
+
+<body>
+
+    <div id="main">
+        <form id="upload">
+            <label>Url to GIF: </label>
+            <input type="text" name="url">
+        </form>
+        <button id="submitGif" onclick="submitGif()">Compress</button>
+    </div>
+
+    <div id="results" style="display:none">
+        <div id="savings"></div>
+        <form id="results">
+            <input type="hidden" id="guid">
+        </form>
+        <button id="getGif" onclick="getGif()">D/L Gif</button>
+    </div>
+
+</body>
+
+</html>
