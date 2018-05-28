@@ -3,7 +3,9 @@ from pyramid.config import Configurator
 from pyramid.response import Response
 from pyramid.view import view_config
 
-# python3
+from hashlib import md5
+import subprocess
+from sys import stdout
 import urllib.request as curl
 
 fake_useragent = 'Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25'
@@ -35,22 +37,34 @@ def main_js(request):
 def compress(request):
     if 'url' not in request.params:
         return {'error': 'no url'}
-    r = curl.Request(request.params['url'], headers={'User-Agent': fake_useragent})
-    f = curl.urlopen(r)
-    image_blob = f.read()
+    #r = curl.Request(request.params['url'], headers={'User-Agent': fake_useragent})
+    #f = curl.urlopen(r)
+
+    ##YT TO GIF
+    cmd = "youtube-dl -f worst -g {url}".format(url=request.params['url'])
+    full_url =  subprocess.check_output(cmd, shell=True).decode(stdout.encoding).strip()
+    cmd = 'ffmpeg -i "{url}" -filter:v fps=fps=1/10 tmp/ffmpeg_%03d.bmp'.format(url=full_url)
+    subprocess.check_output(cmd, shell=True)
+    ## compress bmp files
+    cmd = "magick convert -loop 0 -delay 20 tmp/ffmpeg_*.bmp tmp/out.gif"
+    subprocess.check_output(cmd, shell=True)
+    ## END YT
+    with open("tmp/out.gif", "rb") as f:
+        image_blob = f.read()
     if len(image_blob) == 0:
         return {'error': 'no url'}
     compressed = gan_compress(image_blob)
-    gid = hash(compressed)
+    guid = md5(compressed).hexdigest()
     savings = len(compressed)/len(image_blob)
-    DATABASE[gid] = compressed
-    return {'success': True, 'savings': savings, 'gid': gid}
+    DATABASE[guid] = compressed
+    return {'success': True, 'savings': savings, 'guid': guid}
+
 
 @view_config(route_name='get_gif')
 def get_gif(request):
     resp = Response(content_type='application/json')
     if 'guid' not in request.params:
-        resp.body = {'error': 'bad id'}
+        resp.body = {'error': 'no id'}
         return resp
     guid = request.params['guid']
     if guid not in DATABASE:

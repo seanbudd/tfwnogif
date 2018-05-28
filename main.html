@@ -7,7 +7,7 @@
 <body>
 
     <div id="main">
-        <form id="upload">
+        <form id="upload" action="#">
             <label>Url to GIF: </label>
             <input type="text" name="url">
         </form>
@@ -16,11 +16,13 @@
 
     <div id="results" style="display:none">
         <div id="savings"></div>
-        <form id="results">
-            <input type="hidden" id="guid">
+        <form id="id_form">
+            <input type="hidden" id="guid" name="guid">
         </form>
         <button id="getGif" onclick="getGif()">D/L Gif</button>
     </div>
+
+    <img id="image">
 
 </body>
 
