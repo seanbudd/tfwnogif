@@ -27,6 +27,15 @@ body {
     perspective: 1000px;
 }
 
+#savings {
+	color: rgba(255,255,255,0.3);
+    font-family: 'Press Start 2P', cursive;
+    font-size: 100px;
+    font-weight: 800;
+    padding:20px;
+    text-align: center;
+}
+
 @keyframes shake {
     10%, 90% {
         transform: translate3d(-1px, 0, 0);
