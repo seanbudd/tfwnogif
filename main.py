@@ -41,12 +41,14 @@ def compress(request):
     #f = curl.urlopen(r)
 
     ##YT TO GIF
-    cmd = "youtube-dl -f worst -g {url}".format(url=request.params['url'])
+    cmd = "youtube-dl -f 'mp4[width<720]' -g {url}".format(url=request.params['url'])
     full_url =  subprocess.check_output(cmd, shell=True).decode(stdout.encoding).strip()
     cmd = 'ffmpeg -i "{url}" -filter:v fps=fps=1/10 tmp/ffmpeg_%03d.bmp'.format(url=full_url)
     subprocess.check_output(cmd, shell=True)
     ## compress bmp files
     cmd = "magick convert -loop 0 -delay 20 tmp/ffmpeg_*.bmp tmp/out.gif"
+    subprocess.check_output(cmd, shell=True)
+    cmd = "rm tmp/*ffmpeg_*.bmp"
     subprocess.check_output(cmd, shell=True)
     ## END YT
     with open("tmp/out.gif", "rb") as f:

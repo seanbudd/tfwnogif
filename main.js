@@ -1,4 +1,6 @@
 function submitGif(){
+    var d = document.getElementById("content");
+    d.className += " shake";
     var XHR = new XMLHttpRequest();
     var urlEncodedData = "";
     var form = new FormData(document.querySelector('#upload'));
@@ -9,7 +11,10 @@ function submitGif(){
     XHR.addEventListener('load', function(event) {
         var data = JSON.parse(this.response);
         document.getElementById("guid").value = data.guid;
-        document.getElementById("results").style.display = 'block';
+        var results = document.getElementsByClassName("results");
+        results[0].style.display = 'inline';
+        results[1].style.display = 'block';
+        d.classList.remove("shake");
     });
 
     // Define what happens in case of error

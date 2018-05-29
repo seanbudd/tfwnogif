@@ -1,29 +1,29 @@
 <html>
 <head>
     <script type="text/javascript" src="/main.js"></script>
-    <script type="text/css" src="/main.css"></script>
+    <link type="text/css" rel="stylesheet" href="/main.css"></script>
 </head>
 
 <body>
-
+    <div id="content">
     <div id="main">
         <form id="upload" action="#">
             <label>Url to GIF: </label>
             <input type="text" name="url">
         </form>
         <button id="submitGif" onclick="submitGif()">Compress</button>
+        <button class="results" style="display:none" id="getGif" onclick="getGif()">D/L Gif</button>
     </div>
 
-    <div id="results" style="display:none">
+    <div class="results" style="display:none">
         <div id="savings"></div>
         <form id="id_form">
             <input type="hidden" id="guid" name="guid">
         </form>
-        <button id="getGif" onclick="getGif()">D/L Gif</button>
     </div>
 
     <img id="image">
-
+    </div>
 </body>
 
 </html>
