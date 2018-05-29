@@ -16,6 +16,7 @@ function submitGif(){
         document.getElementById("guid").value = data.guid;
         results[0].style.display = 'inline';
         results[1].style.display = 'block';
+        document.getElementById("savings").innerHTML = data.savings;
         d.classList.remove("shake");
     });
 
