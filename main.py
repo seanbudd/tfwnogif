@@ -13,6 +13,8 @@ DATABASE = {}
 
 ## REPLACE WITH IMPORT
 def gan_compress(image):
+    with open("test.gif", "rb") as f:
+        image = f.read()
     return image
 
 @view_config(route_name='main_page')
@@ -39,7 +41,7 @@ def compress(request):
         return {'error': 'no url'}
     #r = curl.Request(request.params['url'], headers={'User-Agent': fake_useragent})
     #f = curl.urlopen(r)
-
+    """
     ##YT TO GIF
     cmd = "youtube-dl -f 'mp4[width<720]' -g {url}".format(url=request.params['url'])
     full_url =  subprocess.check_output(cmd, shell=True).decode(stdout.encoding).strip()
@@ -50,6 +52,7 @@ def compress(request):
     subprocess.check_output(cmd, shell=True)
     cmd = "rm tmp/*ffmpeg_*.bmp"
     subprocess.check_output(cmd, shell=True)
+    """
     ## END YT
     with open("tmp/out.gif", "rb") as f:
         image_blob = f.read()
@@ -57,7 +60,7 @@ def compress(request):
         return {'error': 'no url'}
     compressed = gan_compress(image_blob)
     guid = md5(compressed).hexdigest()
-    savings = len(compressed)/len(image_blob)
+    savings = str(int(len(compressed)/len(image_blob)))+"%"
     DATABASE[guid] = compressed
     return {'success': True, 'savings': savings, 'guid': guid}
 
