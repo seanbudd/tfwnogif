@@ -8,12 +8,11 @@ import subprocess
 from sys import stdout
 import urllib.request as curl
 
+from compress import batch_compress
+
 fake_useragent = 'Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25'
 DATABASE = {}
 
-## REPLACE WITH IMPORT
-def gan_compress(image):
-    return image
 
 @view_config(route_name='main_page')
 def main_page(request):
@@ -43,19 +42,26 @@ def compress(request):
     ##YT TO GIF
     cmd = "youtube-dl -f 'mp4[width<720]' -g {url}".format(url=request.params['url'])
     full_url =  subprocess.check_output(cmd, shell=True).decode(stdout.encoding).strip()
-    cmd = 'ffmpeg -i "{url}" -filter:v fps=fps=1/10 tmp/ffmpeg_%03d.bmp'.format(url=full_url)
+    cmd = 'ffmpeg -i "{url}" -filter:v fps=fps=1/10 tmp/ffmpeg_%03d.png'.format(url=full_url)
+    print('COMMAND', cmd)
     subprocess.check_output(cmd, shell=True)
-    ## compress bmp files
-    cmd = "magick convert -loop 0 -delay 20 tmp/ffmpeg_*.bmp tmp/out.gif"
+    print('############## run command to resize all images to 1024x512\! ##############')
+    cmd = 'for i in tmp/*png; do convert $i -resize 1024x512\! $i; done'
     subprocess.check_output(cmd, shell=True)
-    cmd = "rm tmp/*ffmpeg_*.bmp"
+    print( '#################### compress tmp files using gan #####################')
+    batch_compress('tmp')
+    print('##################### done ######################')
+    ## images -> gifs
+    cmd = "magick convert -loop 0 -delay 20 tmp/*gen.png tmp/out.gif"
+    subprocess.check_output(cmd, shell=True)
+    cmd = "rm tmp/*ffmpeg_*.png"
     subprocess.check_output(cmd, shell=True)
     ## END YT
     with open("tmp/out.gif", "rb") as f:
         image_blob = f.read()
     if len(image_blob) == 0:
         return {'error': 'no url'}
-    compressed = gan_compress(image_blob)
+    compressed = image_blob
     guid = md5(compressed).hexdigest()
     savings = len(compressed)/len(image_blob)
     DATABASE[guid] = compressed
