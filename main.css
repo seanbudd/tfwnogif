@@ -13,7 +13,7 @@ body {
     border: solid 1px white;
 }
 
-#main, #results, #image {
+#main, #results, #image .guid, #image .guid2{
     margin: auto;
     width: 300px;
     display: block;

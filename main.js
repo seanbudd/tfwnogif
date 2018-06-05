@@ -14,6 +14,7 @@ function submitGif(){
     XHR.addEventListener('load', function(event) {
         var data = JSON.parse(this.response);
         document.getElementById("guid").value = data.guid;
+        document.getElementById("guid2").value = data.guid2;
         results[0].style.display = 'inline';
         results[1].style.display = 'block';
         document.getElementById("savings").innerHTML = data.savings;
@@ -35,18 +36,18 @@ function submitGif(){
     XHR.send(urlEncodedData);
 }
 
-function getGif(){
+function getGif(guid){
     var XHR = new XMLHttpRequest();
     var urlEncodedData = "";
     var form = new FormData(document.querySelector('#id_form'));
 
-    urlEncodedData = ('guid=' + encodeURIComponent(form.get('guid'))).replace(/%20/g, '+');
+    urlEncodedData = ('guid=' + encodeURIComponent(form.get(guid))).replace(/%20/g, '+');
 
     // Define what happens on successful data submission
     XHR.addEventListener('load', function(event) {
         var urlCreator = window.URL || window.webkitURL;
         var imageUrl = urlCreator.createObjectURL(this.response);
-        document.querySelector("#image").src = imageUrl;
+        document.querySelector("#image ."+guid).src = imageUrl;
     });
 
     // Define what happens in case of error

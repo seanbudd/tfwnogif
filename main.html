@@ -13,17 +13,22 @@
             <input type="text" name="url" value="https://www.youtube.com/watch?v=3SQe2xlHEiU">
         </form>
         <button id="submitGif" onclick="submitGif()">Compress</button>
-        <button class="results" style="display:none" id="getGif" onclick="getGif()">D/L Gif</button>
+        <button class="results" style="display:none" id="getGif" onclick="getGif('guid');getGif('guid2')">D/L Gif</button>
     </div>
 
     <div class="results" style="display:none">
         <div id="savings"></div>
         <form id="id_form">
             <input type="hidden" id="guid" name="guid">
+            <input type="hidden" id="guid2" name="guid2">
         </form>
     </div>
 
-    <img id="image">
+    <div id="image">
+        <img class="guid">
+        <img class="guid2">
+    </div>
+
     </div>
 </body>
 
